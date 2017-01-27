@@ -19,8 +19,8 @@ string JEU="Jeu";
 string PAUSE="Pause";
 int SizeWindowH=352;
 int SizeWindowW=720;
-//std::string s = std::to_string(42);
 
+// Decalre each element of the map, the numbers match with the position in the file map.png
 const int TLake[]=
 {
     115,116,116,
@@ -43,6 +43,21 @@ const int THouse[25]=
     78,79,80,81,82,
     101,102,103,104,105,
 };
+const int TBigTree[]=
+{
+    230,231,232,
+    253,254,255,
+    276,277,278,
+    299,300,301,
+
+};
+/*
+const int TShop2[2][16]=
+{
+    {5,6,7,8,28,29,30,31,51,52,53,54,74,75,76,77},
+    {0,1,0,0,1,0,1,0,1,0,1,0,0,0,0,0},
+
+};*/
 const int TShop[]=
 {
     5,6,7,8,
@@ -101,8 +116,10 @@ int Jeu::jouer(){
     Array tab1;
     stringstream out;
     Image icone;
+    int i;
 
     TileMap map,house_m,shop_m,poke_m,test_m;
+    //Former piece of code of the game
     if (!map.load("Image/Map.png", sf::Vector2u(16, 16), level, 16, 5))
         return -1;
     if (!poke_m.loadt("Image/Map.png", sf::Vector2u(16, 16), TPoke, 5, 5,28,10))
@@ -112,27 +129,32 @@ int Jeu::jouer(){
      if (!house_m.loadt("Image/Map.png", sf::Vector2u(16, 16), THouse, 5, 5,0,8))
         return -1;
 
-     tab1.initCollision();
-     //tab1.getCollision();
+     tab1.initCollision();//Create an array fill with 0, it will be useful to manage the collisions later
+
 
 
      tab1.initArray(SizeArrayW,SizeArrayH);
-     tab1.insertElement(15,45,22,Vector2u(0,0),Vector2u(44,21));
-     tab1.insertElement(84,45,22,Vector2u(1,1),Vector2u(5,2));
-     tab1.insertElement(61,45,22,Vector2u(0,18),Vector2u(7,21));
-     tab1.insertArray(TShop,SizeArrayW,SizeArrayH,Vector2u(15,10),Vector2u(18,13));
-     //tab1.insertArray(THouse,SizeArrayW,SizeArrayH,Vector2u(5,3),Vector2u(9,7));
+     tab1.insertElement(15,45,22,Vector2u(0,0),Vector2u(44,21));//15 correspond to the grass, it's at the 15th position in the file map.png
+     tab1.insertElement(84,45,22,Vector2u(1,1),Vector2u(5,2));//84 correspond to the flowers //45 and 22 correspond to the size of the map -> 352/16 = 22 and 720/16=45
+     tab1.insertElement(61,45,22,Vector2u(0,18),Vector2u(10,21));//the two last argument correspond to the place where the first element will be placed
+     tab1.insertElement(83,45,22,Vector2u(26,SizeArrayH-5),Vector2u(26,SizeArrayH));//the two argument correspond to the place where the last element will be placed
+
+     tab1.insertArray(TShop,SizeArrayW,SizeArrayH,Vector2u(15,10),Vector2u(18,13));// in this case the house has been defined previously
+     //tab1.insertArray(THouse,SizeArrayW,SizeArrayH,Vector2u(5,3),Vector2u(9,7));// This function place the building on the map
     tab1.insertArray(TPoke,SizeArrayW,SizeArrayH,Vector2u(32,5),Vector2u(36,9));
     tab1.insertArray(THouse,SizeArrayW,SizeArrayH,Vector2u(5,3),Vector2u(9,7));
-    tab1.insertArray(TSapin,SizeArrayW,SizeArrayH,Vector2u(5,0),Vector2u(5,2));
+    tab1.insertArray(THouse,SizeArrayW,SizeArrayH,Vector2u(15,3),Vector2u(19,7));
+    for(i=0;i<11;i++)
+        tab1.insertArray(TSapin,SizeArrayW,SizeArrayH,Vector2u(i,15),Vector2u(i,17));
+
     tab1.insertArray(TLake,SizeArrayW,SizeArrayH,Vector2u(SizeArrayW-3,5),Vector2u(SizeArrayW,11));
-
+    tab1.insertArray(TBigTree,SizeArrayW,SizeArrayH,Vector2u(32,17),Vector2u(34,20));
     tab1.setCollision();
-
+    // At this point the array tab1 is fill with number
      if (!test_m.load("Image/Map.png", sf::Vector2u(16, 16), tab1.tableau, SizeArrayW, SizeArrayH))
         return -1;
+    // Get the sprite from the file Map.png
 
-     //cout<<"OK"<<tab[0]<<endl;
 
 /********************************Chargement Police et Sprites****************************************/
     if (!Police.loadFromFile("Image/calibri.ttf")||!Sixty.loadFromFile("Image/Sixty.ttf"))
@@ -154,19 +176,19 @@ int Jeu::jouer(){
     textPause.setString("Pause");
     textPause.setColor(Color::Black);
 
-    if (!dresseur.loadFromFile("Image/Sacha.png"))
+    if (!dresseur.loadFromFile("Image/Sacha.png"))// Load the file Sacha.png
     {
       return -1;
     }
     else
     {
-        //dresseur.createMaskFromColor(Color::Green,10);//transparence couleur verte
-        dresseur.createMaskFromColor(Color::White,10);
-        tdresseur_face.loadFromImage(dresseur,area_face);
+        //dresseur.createMaskFromColor(Color::Green,10);//transparency to the green color
+        dresseur.createMaskFromColor(Color::White,10);//
+        tdresseur_face.loadFromImage(dresseur,area_face);// Create 3 textures
         tdresseur_back.loadFromImage(dresseur,area_back);
         tdresseur_side.loadFromImage(dresseur,area_side);
 
-        tdresseur_face_move.loadFromImage(dresseur,area_face_move);
+        tdresseur_face_move.loadFromImage(dresseur,area_face_move);// Texture for the move
         tdresseur_back_move.loadFromImage(dresseur,area_back_move);
         tdresseur_side_move.loadFromImage(dresseur,area_side_move);
 
@@ -180,11 +202,11 @@ int Jeu::jouer(){
         dresseur_sideL_move.setTexture(tdresseur_side_move);
 
         dresseur_sideR=dresseur_sideL;
-        dresseur_sideR.setTextureRect(sf::IntRect(16, 0, -16, 19));
+        dresseur_sideR.setTextureRect(sf::IntRect(16, 0, -16, 19));//Reverse the side texture to get the left image of Sacha
         dresseur_sideR_move=dresseur_sideL_move;
         dresseur_sideR_move.setTextureRect(sf::IntRect(16, 0, -16, 19));
 
-        dresseur1=dresseur_sideR;
+        dresseur1=dresseur_sideR;//Place the player on the map
         dresseur1.setPosition(0,0);
     }
 
@@ -211,7 +233,7 @@ int Jeu::jouer(){
 
 
 /****************************Ouverture de la fenetre*************************************************************/
-    create(VideoMode(SizeWindowW,SizeWindowH),"POKEMON");//,Style::Fullscreen);
+    create(VideoMode(SizeWindowW,SizeWindowH),"POKEMON");//Create the window
 
     setFramerateLimit(30);
 /******************************Gestion des évènements************************************************************/
@@ -374,6 +396,7 @@ int Jeu::jouer(){
 
     if(MODE==PAUSE)
     {
+
         if(((clk.getElapsedTime().asSeconds()-elapsed1.asSeconds())>0.5)&&textPause.getColor()==Color::Black)
         {
         textPause.setColor(Color::Red);
@@ -385,8 +408,9 @@ int Jeu::jouer(){
         textPause.setColor(Color::Black);
         elapsed1=clk.getElapsedTime();
         }
-        //draw(text);
-        draw(textPause);
+            draw(textPause);
+
+
     }
 
 
