@@ -77,7 +77,7 @@ Jeu::Jeu(){
 int Jeu::jouer(){
 /****************************Déclarations***********************************/
     int mouseX,mouseY;
-    int i,flag_move=0,Collision=0;
+    int flag_move=0,Collision=0;
     Event event;
     Font Police,Sixty;
     Texture texture_front,thouse,tdresseur2;

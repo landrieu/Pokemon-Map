@@ -31,18 +31,7 @@ void Array::insertArray(const int toInsert[],int w,int h,Vector2u origine1,Vecto
         }
 
     nb=0;
-        for(int f=0;f<h;f++)
-        {
-            for(int d=0;d<w;d++)
-            {
-            //cout<<" "<<retour[nb];
-            //cout<<" "<<toInsert[nb];
-            //cout<<" "<<tableau[nb];
-            nb++;
-            }
 
-            }
-            //setCollision();
 }
 
 int Array::getTab(int i)
